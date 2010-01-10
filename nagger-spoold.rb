@@ -4,15 +4,19 @@ require 'nagger'
 require 'getoptlong'
 
 opts = GetoptLong.new(
-    [ '--config', '-c', GetoptLong::REQUIRED_ARGUMENT]
+    [ '--config', '-c', GetoptLong::REQUIRED_ARGUMENT ],
+    [ '--foreground', '-f', GetoptLong::NO_ARGUMENT ]
 )
 
+want_daemon = true
 conffile = "/etc/nagger/nagger.cfg"
 
 opts.each do |opt, arg|
     case opt
         when '--config'
             conffile = arg
+        when '--foreground'
+            want_daemon = false
     end
 end
 
@@ -36,11 +40,16 @@ def daemonize
     end
 end
 
-daemonize do
-    Nagger::Config.new(conffile)
+# Do this outside of daemonize, in case there are errors
+Nagger::Config.new(conffile)
+s = Nagger::Spool.new
 
-    s = Nagger::Spool.new
-    s.run
+if want_daemon
+    daemonize do
+        s.run
+    end
+else
+     s.run
 end
 
 # vi:tabstop=4:expandtab:ai
