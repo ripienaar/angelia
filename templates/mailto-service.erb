@@ -1,0 +1,26 @@
+<% 
+    # Set the message id to whatever you would like your mail clients
+    # to use for threading. Consider it a 'unique id' for a stream of messages
+    # from nagios.
+    messageid = "hello" 
+
+    # We could use Mail.random_tag for this instead of a static string.
+    boundary = "00112233445566778899AABBCCDD"
+%>
+To: <%= recipient.user %>
+Message-Id: <%= "<#{messageid}>" %>
+In-Reply-To: <%= "<#{messageid}>" %>
+Mime-Version: 1.0
+Content-Type: multipart/alternative; boundary=<%= boundary %>
+
+--<%= boundary %>
+Content-Type: text/plain; charset=utf-8
+
+Hello world.
+
+--<%= boundary %>
+Content-Type: text/html; charset=utf-8
+
+<b>Hello world</b>
+
+--<%= boundary %>--
