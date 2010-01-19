@@ -1,26 +1,70 @@
 <% 
-    # Set the message id to whatever you would like your mail clients
-    # to use for threading. Consider it a 'unique id' for a stream of messages
-    # from nagios.
-    messageid = "hello" 
+    require 'erb'
+    require 'uri'
 
     # We could use Mail.random_tag for this instead of a static string.
     boundary = "00112233445566778899AABBCCDD"
+
+    state_time = Time.at(LASTSERVICESTATECHANGE.to_i)
 %>
 To: <%= recipient.user %>
-Message-Id: <%= "<#{messageid}>" %>
-In-Reply-To: <%= "<#{messageid}>" %>
+Subject: <%= NOTIFICATIONTYPE %>: <%= SERVICEDESC %> is <%= SERVICESTATE %> on  <%= HOSTALIAS %> (id: <%= LASTSERVICESTATECHANGE %>)
 Mime-Version: 1.0
 Content-Type: multipart/alternative; boundary=<%= boundary %>
 
 --<%= boundary %>
 Content-Type: text/plain; charset=utf-8
 
-Hello world.
+Date/Time: <%= LONGDATETIME %>
+Notification Type: <%= NOTIFICATIONTYPE %>
+Service: <%= SERVICEDESC %>
+Host: <%= HOSTALIAS %> / <%= HOSTADDRESS %>
+State: <%= SERVICESTATE %>
+Attempt: <%= SERVICEATTEMPT %> of <%= MAXSERVICEATTEMPTS %>
+Age in <%= SERVICESTATE %>: <%= Time.now - state_time %> seconds (since <%= state_time %>)
+
+Check output:
+<%= SERVICEOUTPUT %>
+<%= LONGSERVICEOUTPUT %>
 
 --<%= boundary %>
 Content-Type: text/html; charset=utf-8
 
-<b>Hello world</b>
+<h3> Nagios Message </h3>
+
+<b>Date/Time: </b> <%= LONGDATETIME %> <br>
+<b>Host: </b> <%= HOSTALIAS %> / <%= HOSTADDRESS %> <br>
+<b>Service Check: </b> <%= SERVICEDESC %> <br>
+<b>Notification Type: </b> <%= NOTIFICATIONTYPE %> <br>
+<b>State: </b> <%= SERVICESTATE %> <br>
+<b>Attempt: </b> <%= SERVICEATTEMPT %> of <%= MAXSERVICEATTEMPTS %> <br>
+<b>Age in <%= SERVICESTATE %>: </b> <%= Time.now - state_time %> seconds (since <%= state_time %>)
+
+<h3> Actions </h3>
+
+<% summary = "Service Alert: " + URI.escape(SERVICEDESC) %> 
+<% description = URI.escape("
+* Date/Time:  #{LONGDATETIME}
+* Notification Type:  #{NOTIFICATIONTYPE}
+* State:  #{SERVICESTATE}
+* Service:  #{SERVICEDESC}
+* Host:  #{HOSTALIAS} / #{HOSTADDRESS}
+
+Check output:
+{noformat}
+#{SERVICEOUTPUT}
+#{LONGSERVICEOUTPUT}
+{noformat}
+  ")
+  %>
+
+<a href="http://YOURJIRAHOST/secure/CreateIssueDetails!init.jspa?pid=10021&issuetype=1&priority=3&summary=<%= summary %>&description=<%= description %>">Create Jira</a>
+
+<h3> Check Output </h3>
+
+<pre style="border: 1px solid black; background-color: #E3ECED; padding: 1em; margin: 1em;">
+<%= ERB::Util::h(SERVICEOUTPUT) %>
+<%= ERB::Util::h(LONGSERVICEOUTPUT) %>
+</pre>
 
 --<%= boundary %>--
