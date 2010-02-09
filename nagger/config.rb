@@ -7,6 +7,8 @@ module Nagger
     #    templatedir = /path/to/templatedirectory
     #    logfile = /path/to/lofile
     #    loglevel = warn|error|info|fatal|debug
+    #    user = nagios
+    #    group = nagios
     #    plugin = Xmpp
     #    plugin = Twitter
     #    plugin.Xmpp.username = foo
@@ -16,7 +18,8 @@ module Nagger
     # class names would be, each plugin can have configuration stored
     # here as well in the plugin.Pluginname.xxx bits.
     class Config
-        attr_reader :spooldir, :plugins, :templatedir, :logfile, :loglevel
+        attr_reader :spooldir, :plugins, :templatedir, :logfile, :loglevel,
+                    :user, :group
 
         # Reads the config files and startup the plugins, if you want to skip
         # actually starting plugins, like while simply loading the config to 
@@ -26,6 +29,8 @@ module Nagger
             @pluginconfig = {}
             @logfile = "/dev/stdout"
             @loglevel = "warn"
+            @user = nil
+            @group = nil
 
             if File.exists?(configfile)
                 File.open(configfile, "r").each do |line|
@@ -43,6 +48,10 @@ module Nagger
                                     @templatedir = val
                                 when "spooldir"
                                     @spooldir = val
+                                when "user"
+                                    @user = val
+                                when "group"
+                                    @group = val
                                 when "plugin"
                                     @plugins << val
                                 when /^plugin\.(.+?)\.(.+)$/

@@ -2,6 +2,7 @@
 
 require 'nagger'
 require 'getoptlong'
+require 'etc'
 
 opts = GetoptLong.new(
     [ '--config', '-c', GetoptLong::REQUIRED_ARGUMENT ],
@@ -43,6 +44,14 @@ end
 # Do this outside of daemonize, in case there are errors
 Nagger::Config.new(conffile)
 s = Nagger::Spool.new
+
+if Nagger::Util.config.group
+    Process::GID.change_privilege(Etc.getgrnam(Nagger::Util.config.group)["gid"])
+end
+
+if Nagger::Util.config.user
+    Process::UID.change_privilege(Etc.getpwnam(Nagger::Util.config.user)["uid"])
+end
 
 if want_daemon
     daemonize do
