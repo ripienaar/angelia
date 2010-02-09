@@ -55,6 +55,9 @@ end
 
 if want_daemon
     daemonize do
+        File.open(Nagger::Util.config.pidfile, 'w') do |f|
+            f.write(Process.pid.to_s)
+        end
         s.run
     end
 else

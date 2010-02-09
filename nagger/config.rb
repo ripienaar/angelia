@@ -5,6 +5,7 @@ module Nagger
     #
     #    spooldir = /path/to/spooldirectory
     #    templatedir = /path/to/templatedirectory
+    #    pidfile = /path/to/pidfile
     #    logfile = /path/to/lofile
     #    loglevel = warn|error|info|fatal|debug
     #    user = nagios
@@ -19,7 +20,7 @@ module Nagger
     # here as well in the plugin.Pluginname.xxx bits.
     class Config
         attr_reader :spooldir, :plugins, :templatedir, :logfile, :loglevel,
-                    :user, :group
+                    :user, :group, :pidfile
 
         # Reads the config files and startup the plugins, if you want to skip
         # actually starting plugins, like while simply loading the config to 
@@ -28,6 +29,7 @@ module Nagger
             @plugins = []
             @pluginconfig = {}
             @logfile = "/dev/stdout"
+            @pidfile = "/var/run/nagger.pid"
             @loglevel = "warn"
             @user = nil
             @group = nil
@@ -44,6 +46,8 @@ module Nagger
                                     @loglevel = val
                                 when "logfile"
                                     @logfile = val
+                                when "pidfile"
+                                    @pidfile = val
                                 when "templatedir"
                                     @templatedir = val
                                 when "spooldir"
