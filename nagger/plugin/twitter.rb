@@ -19,6 +19,7 @@ module Nagger::Plugin
             user = @config["username"]
             password = @config["password"]
             url = @config["url"]
+            msg = msg[0..139]
 
             # if we had a failed delivery in the last 10 minutes do not try to send a new message
             # this is just to prevent us spamming twitter and getting in their bad books
