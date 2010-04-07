@@ -6,6 +6,8 @@
     boundary = "00112233445566778899AABBCCDD"
 
     state_time = Time.at(LASTSERVICESTATECHANGE.to_i)
+    # LONGSERVICEOUTPUT has escaped newlines, so fix those.
+    output = [SERVICEOUTPUT, LONGSERVICEOUTPUT.split("\\n")].flatten.join("\n")
 %>
 To: <%= recipient.user %>
 Subject: <%= NOTIFICATIONTYPE %>: <%= SERVICEDESC %> is <%= SERVICESTATE %> on  <%= HOSTALIAS %> (id: <%= LASTSERVICESTATECHANGE %>)
@@ -24,8 +26,7 @@ Attempt: <%= SERVICEATTEMPT %> of <%= MAXSERVICEATTEMPTS %>
 Age in <%= SERVICESTATE %>: <%= Time.now - state_time %> seconds (since <%= state_time %>)
 
 Check output:
-<%= SERVICEOUTPUT %>
-<%= LONGSERVICEOUTPUT %>
+<%= output %>
 
 --<%= boundary %>
 Content-Type: text/html; charset=utf-8
@@ -52,19 +53,15 @@ Content-Type: text/html; charset=utf-8
 
 Check output:
 {noformat}
-#{SERVICEOUTPUT}
-#{LONGSERVICEOUTPUT}
+#{output}
 {noformat}
   ")
   %>
 
-<a href="http://YOURJIRAHOST/secure/CreateIssueDetails!init.jspa?pid=10021&issuetype=1&priority=3&summary=<%= summary %>&description=<%= description %>">Create Jira</a>
-
 <h3> Check Output </h3>
 
 <pre style="border: 1px solid black; background-color: #E3ECED; padding: 1em; margin: 1em;">
-<%= ERB::Util::h(SERVICEOUTPUT) %>
-<%= ERB::Util::h(LONGSERVICEOUTPUT) %>
+<%= ERB::Util::h(output) %>
 </pre>
 
 --<%= boundary %>--
