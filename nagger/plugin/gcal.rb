@@ -11,9 +11,8 @@ require 'gcal4ruby'
 #
 # This will make events of 30 minutes.
 #
-# You will need the GCal4Ruby gem, which doesnt currently
-# let you set description, so we're only accepting subject
-# leaving msg for a future enhancement.
+# You will need the GCal4Ruby gem. Message subject is the
+# event title, msg body goes in the even description
 #
 # Recipients are gcal://<calendar name> which should map to
 # an existing calendar in your account
@@ -45,7 +44,7 @@ module Nagger::Plugin
 
             calendar = service.calendars.find {|c| c.title == recipient}
 
-            event = Event.new(service, {:calendar => calendar, :title => subject, :start_time => Time.now, :end_time => Time.now + 600})
+            event = Event.new(service, {:calendar => calendar, :title => subject, :start_time => Time.now, :end_time => Time.now + 600, :content => msg})
             event.save
         end
     end
