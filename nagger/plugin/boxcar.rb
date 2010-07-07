@@ -9,6 +9,9 @@ module Nagger::Plugin
     # plugin = Boxcar
     # plugin.Boxcar.apikey = xxx
     # plugin.Boxcar.apisecret = yyyyy
+    # plugin.Boxcar.serviceid = 123
+    #
+    # Get the serviceid from your Boxcar provider page - see the url.
     #
     # You can then send emails to subscribed people using boxcar://their@email
     class Boxcar
@@ -28,10 +31,11 @@ module Nagger::Plugin
 
             apikey = @config["apikey"]
             apisecret = @config["apisecret"]
+            serviceid = @config["serviceid"]
 
             begin
                 bp = BoxcarAPI::Provider.new(apikey, apisecret)
-                res = bp.notify(recipient, msg, nil, "152")
+                res = bp.notify(recipient, msg, nil, serviceid)
 
                 if res.code == 200
                     return 0
