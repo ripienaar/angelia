@@ -27,11 +27,11 @@ module Nagger
 
                             begin
                                 msg = YAML.load_file(spoolfile)
-                                
+
 
                                 Nagger::Util.route(msg)
 
-                                Nagger::Util.info("Mmessage in #{spoolfile} to #{msg.recipient.protocol}://#{msg.recipient.user} has been delivered")
+                                Nagger::Util.info("Message in #{spoolfile} to #{msg.recipient.protocol}://#{msg.recipient.user} has been delivered")
 
                                 File.unlink("#{spoolfile}")
 
@@ -60,7 +60,7 @@ module Nagger
 
             message.subject = "Nagger Alert" unless message.subject
 
-            File.open("#{config.spooldir}/#{name}.part", 'w') do |f| 
+            File.open("#{config.spooldir}/#{name}.part", 'w') do |f|
                 YAML.dump(message, f)
             end
 
