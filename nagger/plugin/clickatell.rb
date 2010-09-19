@@ -9,6 +9,7 @@ module Nagger::Plugin
     # plugin.Clickatell.user = xxx
     # plugin.Clickatell.password = yyyyy
     # plugin.Clickatell.apikey = 123
+    # plugin.Clickatell.senderid = 123
     #
     # You can then send emails to subscribed people using clickatell://0044xxxxxxxxxxx
     class Clickatell
@@ -29,12 +30,13 @@ module Nagger::Plugin
             apikey = @config["apikey"]
             user = @config["user"]
             password = @config["password"]
+            senderid = @config["senderid"]
 
             begin
                 ct = ::Clickatell::API.authenticate(apikey, user, password)
-                res = ct.send_message(recipient, msg)
-	    rescue Clickatell::API::Error => e
-		raise "Unable to send message: #{e}"
+                res = ct.send_message(recipient, msg, {:from => senderid})
+            rescue Clickatell::API::Error => e
+                raise "Unable to send message: #{e}"
             rescue Exception => e
                 raise(Nagger::PluginConnectionError, "Unhandled issue sending alert: #{e}")
             end
