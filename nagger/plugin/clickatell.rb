@@ -11,7 +11,10 @@ module Nagger::Plugin
     # plugin.Clickatell.apikey = 123
     # plugin.Clickatell.senderid = 123
     #
-    # You can then send emails to subscribed people using clickatell://0044xxxxxxxxxxx
+    # You can then send sms to people using clickatell://44xxxxxxxxxxx
+    #
+    # If there's a submission problem this plugin will wait 2 minutes before
+    # trying again, just to not be hitting their API too hard
     class Clickatell
         def initialize(config)
             Nagger::Util.debug("Creating new insance of Clickatell plugin")
@@ -32,13 +35,23 @@ module Nagger::Plugin
             password = @config["password"]
             senderid = @config["senderid"]
 
-            begin
-                ct = ::Clickatell::API.authenticate(apikey, user, password)
-                res = ct.send_message(recipient, msg, {:from => senderid})
-            rescue Clickatell::API::Error => e
-                raise "Unable to send message: #{e}"
-            rescue Exception => e
-                raise(Nagger::PluginConnectionError, "Unhandled issue sending alert: #{e}")
+            # if we had a failed delivery in the last 10 minutes do not try to send a new message
+            if Time.now.to_i - @lastfailure.to_i > 120
+                begin
+                    ct = ::Clickatell::API.authenticate(apikey, user, password)
+                    res = ct.send_message(recipient, msg, {:from => senderid})
+                    @lastfailure = 0
+
+                rescue Clickatell::API::Error => e
+                    @lastfailure = Time.now
+                    raise "Unable to send message: #{e}"
+
+                rescue Exception => e
+                    @lastfailure = Time.now
+                    raise(Nagger::PluginConnectionError, "Unhandled issue sending alert: #{e}")
+                end
+            else
+                raise(Nagger::PluginConnectionError, "Not delivering message, we've had failures in the last 2 mins")
             end
         end
     end

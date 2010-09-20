@@ -1,5 +1,8 @@
 require 'timeout'
 
+# WARN: This plugin is made defunct by twitters crazy OAuth stuff.
+#
+# it's here for historical reference at this point.
 module Nagger::Plugin
     class Twitter
         def initialize(config)
