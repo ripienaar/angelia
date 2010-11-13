@@ -3,10 +3,10 @@
 require 'rake/rdoctask'
 require 'rake/clean'
 
-PROJ_NAME = "nagger"
-PROJ_FILES = ["build/doc", "nagger-nagios-send.rb", "nagger-send.rb", "#{PROJ_NAME}.rb", "#{PROJ_NAME}", "#{PROJ_NAME}.spec", "templates", "#{PROJ_NAME}.cfg", "#{PROJ_NAME}.init", "nagger-spoold.rb", "COPYING"]
-PROJ_DOC_TITLE = "Nagger - Nagios Notification System"
-PROJ_VERSION = "0.20"
+PROJ_NAME = "angelia"
+PROJ_FILES = ["build/doc", "angelia-nagios-send.rb", "angelia-send.rb", "#{PROJ_NAME}.rb", "#{PROJ_NAME}", "#{PROJ_NAME}.spec", "templates", "#{PROJ_NAME}.cfg", "#{PROJ_NAME}.init", "angelia-spoold.rb", "COPYING"]
+PROJ_DOC_TITLE = "Angelia - Notification System"
+PROJ_VERSION = "1.0.0"
 PROJ_RELEASE = "1"
 PROJ_RPM_NAMES = [PROJ_NAME]
 
@@ -36,7 +36,7 @@ rd = Rake::RDocTask.new(:doc) { |rdoc|
     rdoc.rdoc_dir = 'build/doc'
     rdoc.template = 'html'
     rdoc.title    = "#{PROJ_DOC_TITLE} version #{CURRENT_VERSION}"
-    rdoc.options << '--line-numbers' << '--inline-source' << '--main=Nagger'
+    rdoc.options << '--line-numbers' << '--inline-source' << '--main=Angelia'
 }
 
 desc "Create a tarball for this release"

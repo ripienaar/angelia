@@ -1,19 +1,19 @@
-module Nagger::Plugin
+module Angelia::Plugin
 
     # A simple stdout plugin for quickly testing templates
     class Stdout
         def initialize(config)
-            Nagger::Util.debug("Creating new instance of Stdout plugin")
+            Angelia::Util.debug("Creating new instance of Stdout plugin")
 
             @config = config
         end
 
         def self.register
-            Nagger::Util.register_plugin("stdout", "Stdout")
+            Angelia::Util.register_plugin("stdout", "Stdout")
         end
 
         def send(recipient, subject, msg)
-            Nagger::Util.debug("#{self.class} Sending message to '#{recipient}' with subject '#{subject}' and body '#{msg}'")
+            Angelia::Util.debug("#{self.class} Sending message to '#{recipient}' with subject '#{subject}' and body '#{msg}'")
             puts "To: #{recipient}"
             puts "Subject: #{subject}"
             puts

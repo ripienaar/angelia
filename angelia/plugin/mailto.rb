@@ -1,24 +1,24 @@
 require 'rubygems'
 require 'mail'
 
-module Nagger::Plugin
+module Angelia::Plugin
 
     # A simple mailto plugin for sending email from nagios in a way
-    # that is more maintainable/configurable than the nagios default 
+    # that is more maintainable/configurable than the nagios default
     # of 'printf | mail'
     class Mailto
         def initialize(config)
-            Nagger::Util.debug("Creating new instance of Mailto plugin")
+            Angelia::Util.debug("Creating new instance of Mailto plugin")
 
             @config = config
         end
 
         def self.register
-            Nagger::Util.register_plugin("mailto", "Mailto")
+            Angelia::Util.register_plugin("mailto", "Mailto")
         end
 
         def send(recipient, subject, msg)
-            Nagger::Util.debug("#{self.class} Sending message to '#{recipient}' with subject '#{subject}' and body '#{msg}'")
+            Angelia::Util.debug("#{self.class} Sending message to '#{recipient}' with subject '#{subject}' and body '#{msg}'")
 
             mail = Mail.new(msg)
 
@@ -35,7 +35,7 @@ module Nagger::Plugin
                 mail.body = msg
             end
 
-            Nagger::Util.debug("Mail contents:\n#{mail}")
+            Angelia::Util.debug("Mail contents:\n#{mail}")
 
             Mail.defaults.smtp @config["server"]
             mail.deliver!

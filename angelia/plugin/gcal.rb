@@ -16,22 +16,22 @@ require 'gcal4ruby'
 #
 # Recipients are gcal://<calendar name> which should map to
 # an existing calendar in your account
-module Nagger::Plugin
+module Angelia::Plugin
     class Gcal
         include GCal4Ruby
 
         def initialize(config)
-            Nagger::Util.debug("Creating new instance of Gcal plugin")
+            Angelia::Util.debug("Creating new instance of Gcal plugin")
 
             @config = config
         end
 
         def self.register
-            Nagger::Util.register_plugin("gcal", "Gcal")
+            Angelia::Util.register_plugin("gcal", "Gcal")
         end
 
         def send(recipient, subject, msg)
-            Nagger::Util.debug("#{self.class} Sending message to '#{recipient}' with subject '#{subject}' and body '#{msg}'")
+            Angelia::Util.debug("#{self.class} Sending message to '#{recipient}' with subject '#{subject}' and body '#{msg}'")
 
             user = @config["user"]
             pass = @config["password"]

@@ -1,19 +1,19 @@
 require 'erb'
 require 'logger'
 
-module Nagger
+module Angelia
     # exception for corrupt message files
-    class Nagger::CorruptMessage < RuntimeError
+    class Angelia::CorruptMessage < RuntimeError
     end
 
     # exception to be raised when a plugin can't connect to its transport
-    class Nagger::PluginConnectionError < RuntimeError
+    class Angelia::PluginConnectionError < RuntimeError
     end
 
     # Simple utility class, these are all just class methods, you shouldn't need
     # to instantiate an instance of this.
     class Util
-        @@plugins = {} 
+        @@plugins = {}
         @@config = {}
         @@logger = nil
 
@@ -21,27 +21,27 @@ module Nagger
         #
         #    register_plugin("twitter", "Twitter")
         #
-        # This will ensure that any twitter:// messages gets passed to the Nagger::Plugin::Twitter class.
+        # This will ensure that any twitter:// messages gets passed to the Angelia::Plugin::Twitter class.
         #
-        # This method will instantiate new instances of each plugin and store it in a local variable.  
-        # No class should be calling plugins directly, to deliver messages use Nagger::Util.route
+        # This method will instantiate new instances of each plugin and store it in a local variable.
+        # No class should be calling plugins directly, to deliver messages use Angelia::Util.route
         def self.register_plugin(protocol, klass)
-            Nagger::Util.info("Registering class 'Nagger::Plugin::#{klass}' for protocol '#{protocol}'")
-           
+            Angelia::Util.info("Registering class 'Angelia::Plugin::#{klass}' for protocol '#{protocol}'")
+
             begin
                 c = @@config.pluginconf(klass)
 
-                k = eval("Nagger::Plugin::#{klass}.new(c)")
-            rescue Nagger::PluginConnectionError => e
-                Nagger::Util.warn("Nagger::Plugin::#{klass} could not connect to its provider, non critical runtime error")
+                k = eval("Angelia::Plugin::#{klass}.new(c)")
+            rescue Angelia::PluginConnectionError => e
+                Angelia::Util.warn("Angelia::Plugin::#{klass} could not connect to its provider, non critical runtime error")
             end
 
             @@plugins.store(protocol, k)
         end
 
-        # Routes a message to the correct plugin, expects a Nagger::Message object.
+        # Routes a message to the correct plugin, expects a Angelia::Message object.
         #
-        # Routing will happen based on the properties of the Nagger::Recipient object
+        # Routing will happen based on the properties of the Angelia::Recipient object
         # that is held inside a properly built Message object, the message, recipient etc
         # will be passed to the send method of the correct plugin.
         def self.route(msg)
@@ -55,16 +55,16 @@ module Nagger
             if @@plugins.has_key? protocol
                 @@plugins[protocol].send(recipient, subject, message)
             else
-                Nagger::Util.error("Unknown protocol #{protocol}")
+                Angelia::Util.error("Unknown protocol #{protocol}")
             end
         end
 
-        # Saves the config, should be an instance of Nagger::Config
+        # Saves the config, should be an instance of Angelia::Config
         def self.config=(config)
             @@config = config
         end
 
-        # Returns the previously saved instance of Nagger::Config
+        # Returns the previously saved instance of Angelia::Config
         def self.config
             @@config
         end

@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 
-require 'nagger'
+require 'angelia'
 require 'getoptlong'
 
 conffile = nil
@@ -37,12 +37,12 @@ if message == ""
 end
 
 begin
-    Nagger::Config.new(conffile, false)
+    Angelia::Config.new(conffile, false)
 
-    Nagger::Spool.createmsg Nagger::Message.new(recipient, message, subject, "")
+    Angelia::Spool.createmsg Angelia::Message.new(recipient, message, subject, "")
 
-rescue Nagger::CorruptMessage => e
-    Nagger::Util.fatal("Could not create message: #{e}")
+rescue Angelia::CorruptMessage => e
+    Angelia::Util.fatal("Could not create message: #{e}")
 
 rescue Exception => e
     $stderr.puts("Fatal error, message not sent: #{e}")

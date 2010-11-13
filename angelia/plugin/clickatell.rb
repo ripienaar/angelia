@@ -1,8 +1,8 @@
 require 'rubygems'
 require 'clickatell'
 
-module Nagger::Plugin
-    # Plugin that sends SMS messages via Clickatell, needs the Clickatell gem from 
+module Angelia::Plugin
+    # Plugin that sends SMS messages via Clickatell, needs the Clickatell gem from
     # http://clickatell.rubyforge.org/
     #
     # plugin = Clickatell
@@ -17,18 +17,18 @@ module Nagger::Plugin
     # trying again, just to not be hitting their API too hard
     class Clickatell
         def initialize(config)
-            Nagger::Util.debug("Creating new insance of Clickatell plugin")
+            Angelia::Util.debug("Creating new insance of Clickatell plugin")
 
             @config = config
             @lastfailure = 0
         end
 
         def self.register
-            Nagger::Util.register_plugin("clickatell", "Clickatell")
+            Angelia::Util.register_plugin("clickatell", "Clickatell")
         end
 
         def send(recipient, subject, msg)
-            Nagger::Util.debug("#{self.class} Sending message to '#{recipient}' with subject '#{subject}' and body '#{msg}'")
+            Angelia::Util.debug("#{self.class} Sending message to '#{recipient}' with subject '#{subject}' and body '#{msg}'")
 
             apikey = @config["apikey"]
             user = @config["user"]
@@ -48,10 +48,10 @@ module Nagger::Plugin
 
                 rescue Exception => e
                     @lastfailure = Time.now
-                    raise(Nagger::PluginConnectionError, "Unhandled issue sending alert: #{e}")
+                    raise(Angelia::PluginConnectionError, "Unhandled issue sending alert: #{e}")
                 end
             else
-                raise(Nagger::PluginConnectionError, "Not delivering message, we've had failures in the last 2 mins")
+                raise(Angelia::PluginConnectionError, "Not delivering message, we've had failures in the last 2 mins")
             end
         end
     end

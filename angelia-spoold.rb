@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 
-require 'nagger'
+require 'angelia'
 require 'getoptlong'
 require 'etc'
 
@@ -10,7 +10,7 @@ opts = GetoptLong.new(
 )
 
 want_daemon = true
-conffile = "/etc/nagger/nagger.cfg"
+conffile = "/etc/angelia/angelia.cfg"
 
 opts.each do |opt, arg|
     case opt
@@ -33,7 +33,7 @@ def daemonize
         STDOUT.reopen('/dev/null', 'a')
         STDERR.reopen('/dev/null', 'a')
 
-        trap("TERM") { 
+        trap("TERM") {
             exit
         }
 
@@ -42,20 +42,20 @@ def daemonize
 end
 
 # Do this outside of daemonize, in case there are errors
-Nagger::Config.new(conffile)
-s = Nagger::Spool.new
+Angelia::Config.new(conffile)
+s = Angelia::Spool.new
 
-if Nagger::Util.config.group
-    Process::GID.change_privilege(Etc.getgrnam(Nagger::Util.config.group)["gid"])
+if Angelia::Util.config.group
+    Process::GID.change_privilege(Etc.getgrnam(Angelia::Util.config.group)["gid"])
 end
 
-if Nagger::Util.config.user
-    Process::UID.change_privilege(Etc.getpwnam(Nagger::Util.config.user)["uid"])
+if Angelia::Util.config.user
+    Process::UID.change_privilege(Etc.getpwnam(Angelia::Util.config.user)["uid"])
 end
 
 if want_daemon
     daemonize do
-        File.open(Nagger::Util.config.pidfile, 'w') do |f|
+        File.open(Angelia::Util.config.pidfile, 'w') do |f|
             f.write(Process.pid.to_s)
         end
         s.run

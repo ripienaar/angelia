@@ -1,37 +1,37 @@
-module Nagger
-    # Hold individual alert messages, these get dumped using YAML to 
+module Angelia
+    # Hold individual alert messages, these get dumped using YAML to
     # disk in the spool.
     #
-    # Recipients are instances of Nagger::Recipient.
+    # Recipients are instances of Angelia::Recipient.
     class Message
         attr_accessor :recipient, :subject, :message, :vars, :msgmode
 
         # Creates a new message.
         #
-        # If message is not "" then this will be the body of the 
+        # If message is not "" then this will be the body of the
         # alert regardless of anything else.
         #
-        # If you specify either nagios-host or nagios-service it's 
-        # assumed this is running under nagios and all the NAGIOS_* 
-        # environment variables are available, these will be used in 
+        # If you specify either nagios-host or nagios-service it's
+        # assumed this is running under nagios and all the NAGIOS_*
+        # environment variables are available, these will be used in
         # conjunction with templates to create the message bodies.
         #
-        # If anything prevents the message from being built such as 
-        # a corrupt combinarion of options etc you'll receive an 
-        # Nagger::CorruptMessage exception.
+        # If anything prevents the message from being built such as
+        # a corrupt combinarion of options etc you'll receive an
+        # Angelia::CorruptMessage exception.
         def initialize(recipient, message, subject, mode)
-            @recipient = Nagger::Recipient.new(recipient)
+            @recipient = Angelia::Recipient.new(recipient)
             @message = message
             @subject = subject
             @msgmode = mode
 
-            Nagger::Util.debug("New message created for : recipient: #{@recipient.protocol}:#{@recipient.user} in mode #{@msgmode}")
+            Angelia::Util.debug("New message created for : recipient: #{@recipient.protocol}:#{@recipient.user} in mode #{@msgmode}")
 
             if mode =~ /^nagios/ && message == ""
                 unless ENV["NAGIOS_DATE"]
-                    Nagger::Util.debug("No ENV[NAGIOS_DATE] variable and message == ''")
+                    Angelia::Util.debug("No ENV[NAGIOS_DATE] variable and message == ''")
 
-                    raise(Nagger::CorruptMessage, "Must be run from within nagios")
+                    raise(Angelia::CorruptMessage, "Must be run from within nagios")
                 end
 
                 @vars = {}
@@ -48,18 +48,18 @@ module Nagger
             makemsg if @message == ""
         end
 
-        # Creates the message, if this is a nagios message pass all the NAGIOS_* 
+        # Creates the message, if this is a nagios message pass all the NAGIOS_*
         # variables into a binding and use this with ERB to build the message body.
         #
         # Temlates should be called <protocol>-<host|service>.erb in the templatedir
-        # as configured using Nagger::Config
+        # as configured using Angelia::Config
         def makemsg
             # if this is a nagios template, use the ENV vars to build the template
             # else just use whatever message was passed to the object
-            if @msgmode =~ /^nagios-(.+)/ 
+            if @msgmode =~ /^nagios-(.+)/
                 type = $1
-                templatefile = "#{Nagger::Util.config.templatedir}/#{recipient.protocol}-#{type}.erb"
-                Nagger::Util.debug("Creating message body based on template #{templatefile}")
+                templatefile = "#{Angelia::Util.config.templatedir}/#{recipient.protocol}-#{type}.erb"
+                Angelia::Util.debug("Creating message body based on template #{templatefile}")
 
                 # create a binding and inject the NAGIOS_* vars into it, we'll use the binding
                 # later on in the template so the template has access to these variables without
@@ -68,14 +68,14 @@ module Nagger
                 @vars.each do |k, v|
                     eval("#{k} = @vars[\"#{k}\"]", b)
                 end
-                
-                
+
+
                 if File.exists? templatefile
                     template = File.readlines(templatefile).join
                     renderer = ERB.new(template, 0, "<>")
                     @message = renderer.result(b)
                 else
-                    raise(Nagger::CorruptMessage, "Cannot find template #{templatefile}")
+                    raise(Angelia::CorruptMessage, "Cannot find template #{templatefile}")
                 end
             end
         end

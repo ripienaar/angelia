@@ -1,5 +1,5 @@
-module Nagger
-    # Simple class to handle the configuring of the nagger.
+module Angelia
+    # Simple class to handle the configuring of the angelia.
     #
     # At present config files can look like this:
     #
@@ -15,7 +15,7 @@ module Nagger
     #    plugin.Xmpp.username = foo
     #    plugin.Twitter.username = bar
     #
-    # The plugin = lines tell it what plugin files to load and what 
+    # The plugin = lines tell it what plugin files to load and what
     # class names would be, each plugin can have configuration stored
     # here as well in the plugin.Pluginname.xxx bits.
     class Config
@@ -23,13 +23,13 @@ module Nagger
                     :user, :group, :pidfile
 
         # Reads the config files and startup the plugins, if you want to skip
-        # actually starting plugins, like while simply loading the config to 
+        # actually starting plugins, like while simply loading the config to
         # create new messages, set startplugins = false or nil etc
         def initialize(configfile, startplugins = true)
             @plugins = []
             @pluginconfig = {}
             @logfile = "/dev/stdout"
-            @pidfile = "/var/run/nagger.pid"
+            @pidfile = "/var/run/angelia.pid"
             @loglevel = "warn"
             @user = nil
             @group = nil
@@ -69,7 +69,7 @@ module Nagger
                 end
             end
 
-            Nagger::Util.config = self
+            Angelia::Util.config = self
 
             loadplugins if startplugins
         end
@@ -83,10 +83,10 @@ module Nagger
         # Load all configured plugins and call their register method to initialize them
         def loadplugins
             @plugins.each do |p|
-                Nagger::Util.debug("loading plugin nagger/plugin/#{p.downcase}.rb and registering Nagger::Plugin::#{p}")
+                Angelia::Util.debug("loading plugin angelia/plugin/#{p.downcase}.rb and registering Angelia::Plugin::#{p}")
 
-                Kernel.load("nagger/plugin/#{p.downcase}.rb")
-                eval("Nagger::Plugin::#{p}.register")
+                Kernel.load("angelia/plugin/#{p.downcase}.rb")
+                eval("Angelia::Plugin::#{p}.register")
             end
         end
     end

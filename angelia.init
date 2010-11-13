@@ -1,20 +1,20 @@
 #!/bin/bash
 #
-# Init file for the nagger spool daemon
+# Init file for the angelia spool daemon
 #
 # chkconfig: 2345 20 20
 # description: Multi protocol nagios notifier
 #
-# processname: nagger-spoold
+# processname: angelia-spoold
 
 # Source function library.
 . /etc/rc.d/init.d/functions
 
-desc="Nagger Spool Daemon"
-prog="nagger-spoold"
+desc="Angelia Spool Daemon"
+prog="angelia-spoold"
 
-# these can be overrode in /etc/sysconfig/nagger-spoold
-CONFFILE=/etc/nagger/nagger.cfg
+# these can be overrode in /etc/sysconfig/angelia-spoold
+CONFFILE=/etc/angelia/angelia.cfg
 
 if [ -r /etc/sysconfig/$prog ]; then
 	source /etc/sysconfig/$prog
@@ -24,7 +24,7 @@ start() {
 	echo -n $"Starting $desc ($prog): "
 	daemon --check=$prog /usr/sbin/${prog} --config ${CONFFILE}
 	RETVAL=$?
-	echo 
+	echo
 	[ $RETVAL -eq 0 ] && touch /var/lock/subsys/$prog
 	return $RETVAL
 }

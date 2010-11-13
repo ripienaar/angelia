@@ -1,3 +1,5 @@
-This is a tool to facilitate the development of nagios notification methods using many different protocols and delivery systems while using a single simple script that can deliver all messages.
+This is a tool to facilitate the development of nagios notification
+methods using many different protocols and delivery systems while
+using a single simple script that can deliver all messages.
 
-For details see http://code.google.com/p/nagger/
+For details see http://github.com/ripienaar/angelia
