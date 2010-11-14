@@ -9,7 +9,7 @@ Messages have recipients in the form:
 and each protocol gets handled by a different plugin.
 
 At present there are just two plugins that serve as a introduction to the
-plugin system, see [https://github.com/ripienaar/angelia/blob/master/angelia/plugin/xmpp.rb](Angelia::Plugin::Xmpp) and [https://github.com/ripienaar/angelia/blob/master/angelia/plugin/clickatell.rb](Angelia::Plugin::Clickatell).
+plugin system, see [Angelia::Plugin::Xmpp](https://github.com/ripienaar/angelia/blob/master/angelia/plugin/xmpp.rb) and [Angelia::Plugin::Clickatell](https://github.com/ripienaar/angelia/blob/master/angelia/plugin/clickatell.rb).
 
 When called from inside nagios a script - _angelia-nagios-send_ - should be used
 it will assist in building up the message bodies by means of templates and the
@@ -19,9 +19,9 @@ service notifies, these are in files:
         templates/protocol-host.erb
         templates/protocol-service.erb
 
-See the [https://github.com/ripienaar/angelia/tree/master/templates/](provided templates) for samples.
+See the [provided templates](https://github.com/ripienaar/angelia/tree/master/templates/) for samples
 
-And you can use any of the _NAGIOS`_`*`_ variables that Nagios sets in the environment.
+And you can use any of the _NAGIOS\_\*_ variables that Nagios sets in the environment.
 
 The nagios commands to send notifications via this tools are:
 
@@ -49,5 +49,5 @@ Included in the source are init scripts, daemon to run and poll the spool and al
 
 This code is released under the terms of the Apache version 2 license.
 
-Contact R.I.Pienaar <rip@devco.net> / http://www.devco.net / @ripienaar
+Contact R.I.Pienaar <rip@devco.net> / [www.devco.net](http://www.devco.net/) / [@ripienaar](http://twitter.com/ripienaar)
 
