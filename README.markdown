@@ -26,13 +26,13 @@ And you can use any of the _NAGIOS\_\*_ variables that Nagios sets in the enviro
 The nagios commands to send notifications via this tools are:
 
         define command{
-                command_name                    host-notify-by-angelia
-                command_line                    /usr/sbin/angelia-nagios-send -c /etc/angelia/angelia.cfg --host-notify -r $CONTACTEMAIL$
+                command_name host-notify-by-angelia
+                command_line /usr/sbin/angelia-nagios-send -c /etc/angelia/angelia.cfg --host-notify -r $CONTACTEMAIL$
         }
 
         define command{
-                command_name                    notify-by-angelia
-                command_line                    /usr/sbin/angelia-nagios-send -c /etc/angelia/angelia.cfg --service-notify -r $CONTACTEMAIL$
+                command_name notify-by-angelia
+                command_line /usr/sbin/angelia-nagios-send -c /etc/angelia/angelia.cfg --service-notify -r $CONTACTEMAIL$
         }
 
 This will set all the nagios environment variables and the angelia notifier will use these with the templates mentioned earlier.
