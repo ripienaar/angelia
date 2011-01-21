@@ -11,9 +11,10 @@ module Angelia
         # If message is not "" then this will be the body of the
         # alert regardless of anything else.
         #
-        # If you specify either nagios-host or nagios-service it's
-        # assumed this is running under nagios and all the NAGIOS_*
-        # environment variables are available, these will be used in
+        # If you specify either nagios-host or nagios-service for nagios
+        # and icinga-host or icinga-service for Icinga, it's assumed this
+        # is running under nagios or icinga and all the NAGIOS_* or ICINGA_*
+        # environment variables are available, these  will be used in
         # conjunction with templates to create the message bodies.
         #
         # If anything prevents the message from being built such as
@@ -27,18 +28,20 @@ module Angelia
 
             Angelia::Util.debug("New message created for : recipient: #{@recipient.protocol}:#{@recipient.user} in mode #{@msgmode}")
 
-            if mode =~ /^nagios/ && message == ""
-                unless ENV["NAGIOS_DATE"]
-                    Angelia::Util.debug("No ENV[NAGIOS_DATE] variable and message == ''")
+            if mode =~ /^(nagios|icinga)/ && message == ""
+                unless ENV["#{$1.upcase}_DATE"]
+                    Angelia::Util.debug("No ENV[#{$1.upcase}_DATE] variable and message == ''")
 
-                    raise(Angelia::CorruptMessage, "Must be run from within nagios")
+                    raise(Angelia::CorruptMessage, "Must be run from within #{$1}")
                 end
 
                 @vars = {}
+                # store our backend too
+                @vars["BACKEND"] = $1.capitalize
 
                 ENV.each do |k, v|
-                    if k =~ /^NAGIOS_(.+)/
-                        @vars[$1] = v
+                    if k =~ /^(NAGIOS_|ICINGA_)(.+)/
+                        @vars[$2] = v
                     end
                 end
             end
@@ -48,7 +51,7 @@ module Angelia
             makemsg if @message == ""
         end
 
-        # Creates the message, if this is a nagios message pass all the NAGIOS_*
+        # Creates the message, if this is a nagios or icinga message pass all the NAGIOS_* or ICINGA_*
         # variables into a binding and use this with ERB to build the message body.
         #
         # Temlates should be called <protocol>-<host|service>.erb in the templatedir
@@ -56,12 +59,12 @@ module Angelia
         def makemsg
             # if this is a nagios template, use the ENV vars to build the template
             # else just use whatever message was passed to the object
-            if @msgmode =~ /^nagios-(.+)/
-                type = $1
+            if @msgmode =~ /^(nagios-|icinga-)(.+)/
+                type = $2
                 templatefile = "#{Angelia::Util.config.templatedir}/#{recipient.protocol}-#{type}.erb"
                 Angelia::Util.debug("Creating message body based on template #{templatefile}")
 
-                # create a binding and inject the NAGIOS_* vars into it, we'll use the binding
+                # create a binding and inject the NAGIOS_*/ICINGA_* vars into it, we'll use the binding
                 # later on in the template so the template has access to these variables without
                 # needing to do @vars[HOSTNAME] for example, just HOSTNAME would work
                 b = binding

@@ -37,12 +37,15 @@ The nagios commands to send notifications via this tools are:
 
 This will set all the nagios environment variables and the angelia notifier will use these with the templates mentioned earlier.
 
+You can add the --icinga option if you are running under Icinga. This will set all the Icinga environment variables as well.
+
 Normal messages can be send using angelia-send fro the command line or other monitoring systems, in this case you need to provide
 your own message body.
 
 Sample calls to put messages on the spool are:
 
         $ angelia-nagios-send -c /etc/angelia/angelia.cfg --service-notify -r xmpp://you@jabber.com
+        $ angelia-nagios-send -c /etc/angelia/angelia.cfg --icinga --service-notify -r clickatell://1234567890
         $ angelia-send -c /etc/angelia/angelia.cfg -r xmpp://you@jabber.com -m 'my message'
 
 Included in the source are init scripts, daemon to run and poll the spool and also a RPM spec file to build it.
