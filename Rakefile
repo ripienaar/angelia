@@ -62,8 +62,10 @@ task :rpm => [:archive] do
     case lsbdistro
         when 'CentOS'
             rpmdist = "el#{lsbdistrel}"
+        when 'AmazonAMI'
+            rpmdist = 'amzn1'
         else
-            rpmdist = ""
+            rpmdist = ''
     end
 
     sh %{cp build/#{PROJ_NAME}-#{CURRENT_VERSION}.tgz #{sourcedir}}
