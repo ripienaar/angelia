@@ -42,7 +42,7 @@ module Angelia::Plugin
                     res = ct.send_message(recipient, msg, {:from => senderid})
                     @lastfailure = 0
 
-                rescue Clickatell::API::Error => e
+                rescue ::Clickatell::API::Error => e
                     @lastfailure = Time.now
                     raise "Unable to send message: #{e}"
 

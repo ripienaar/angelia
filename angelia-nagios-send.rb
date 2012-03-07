@@ -8,11 +8,13 @@ recipient = nil
 subject = ""
 message = ""
 mode = nil
+backend = "nagios"
 
 opts = GetoptLong.new(
     [ '--config', '-c', GetoptLong::REQUIRED_ARGUMENT],
     [ '--recipient', '-r', GetoptLong::REQUIRED_ARGUMENT],
     [ '--subject', '-s', GetoptLong::REQUIRED_ARGUMENT],
+    [ '--icinga',  GetoptLong::NO_ARGUMENT],
     [ '--host-notify', GetoptLong::NO_ARGUMENT],
     [ '--service-notify', GetoptLong::NO_ARGUMENT],
     [ '--message', '-m', GetoptLong::REQUIRED_ARGUMENT]
@@ -26,6 +28,8 @@ opts.each do |opt, arg|
             recipient = arg
         when '--subject'
             subject = arg
+        when '--icinga'
+            backend = 'icinga' 
         when '--host-notify'
             mode = 'host'
         when '--service-notify'
@@ -46,7 +50,7 @@ end
 begin
     Angelia::Config.new(conffile, false)
 
-    Angelia::Spool.createmsg Angelia::Message.new(recipient, message, subject, "nagios-#{mode}")
+    Angelia::Spool.createmsg Angelia::Message.new(recipient, message, subject, "#{backend}-#{mode}")
 
 rescue Angelia::CorruptMessage => e
     Angelia::Util.fatal("Could not create message: #{e}")
