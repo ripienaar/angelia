@@ -1,4 +1,7 @@
 require'rubygems'
+
+gem 'boxcar_api', '>= 1.2.0'
+
 require 'boxcar_api'
 
 module Angelia::Plugin
@@ -38,7 +41,7 @@ module Angelia::Plugin
 
             begin
                 bp = BoxcarAPI::Provider.new(apikey, apisecret)
-                res = bp.notify(recipient, msg, sender, nil, serviceid)
+                res = bp.notify(recipient, msg)
 
                 if res.code == 200
                     return 0
