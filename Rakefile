@@ -6,7 +6,7 @@ require 'rake/clean'
 PROJ_NAME = "angelia"
 PROJ_FILES = ["build/doc", "angelia-nagios-send.rb", "angelia-send.rb", "#{PROJ_NAME}.rb", "#{PROJ_NAME}", "#{PROJ_NAME}.spec", "templates", "#{PROJ_NAME}.cfg", "#{PROJ_NAME}.init", "angelia-spoold.rb", "COPYING"]
 PROJ_DOC_TITLE = "Angelia - Notification System"
-PROJ_VERSION = "1.0.1"
+PROJ_VERSION = "1.0.2"
 PROJ_RELEASE = "1"
 PROJ_RPM_NAMES = [PROJ_NAME]
 

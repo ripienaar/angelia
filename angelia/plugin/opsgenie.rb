@@ -12,7 +12,7 @@ module Angelia::Plugin
   # plugin.Opsgenie.apikey = xxx
   #
   # You can then send messages to users people using opsgenie://you@example.com
-  class Boxcar
+  class Opsgenie
     def initialize(config)
       Angelia::Util.debug("Creating new insance of Opsgenie plugin")
 
