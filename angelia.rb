@@ -35,11 +35,9 @@ require 'yaml'
 #
 # Contact rip <at> devco.net with any questions.
 module Angelia
-    autoload :Util, "angelia/util.rb"
-    autoload :Config, "angelia/config.rb"
-    autoload :Spool, "angelia/spool.rb"
-    autoload :Message, "angelia/message.rb"
-    autoload :Recipient, "angelia/recipient.rb"
+  autoload :Util, "angelia/util.rb"
+  autoload :Config, "angelia/config.rb"
+  autoload :Spool, "angelia/spool.rb"
+  autoload :Message, "angelia/message.rb"
+  autoload :Recipient, "angelia/recipient.rb"
 end
-
-# vi:tabstop=4:expandtab:ai

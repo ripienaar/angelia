@@ -38,19 +38,17 @@ module Angelia::Plugin
             Angelia::Util.debug("Mail contents:\n#{mail}")
 
             mail.delivery_method.settings = {
-                    :address               => ( @config["server"] || "localhost" ),
-                    :port                  => ( @config["port"]   || 25 ),
-                    :domain                => ( @config["domain"] || "localhost.localdomain" ),
-                    :user_name             => @config["username"],
-                    :password              => @config["password"],
-                    :authentication        => ( @config["username"] && @config["password"] ? 'plain' : nil ),
-                    :openssl_verify_mode   => ( @config["sslmode"] || nil )
+                :address               => ( @config["server"] || "localhost" ),
+                :port                  => ( @config["port"]   || 25 ),
+                :domain                => ( @config["domain"] || "localhost.localdomain" ),
+                :user_name             => @config["username"],
+                :password              => @config["password"],
+                :authentication        => ( @config["username"] && @config["password"] ? 'plain' : nil ),
+                :openssl_verify_mode   => ( @config["sslmode"] || nil )
 
-                }
+            }
 
             mail.deliver!
         end
     end
 end
-
-# vi:shiftwidth=4:tabstop=4:expandtab:ai
